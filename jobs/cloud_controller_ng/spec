@@ -6,7 +6,8 @@ templates:
   mime.types: config/mime.types
   cloud_controller_ng.yml.erb: config/cloud_controller_ng.yml
   cloud_controller_ng_ctl.erb: bin/cloud_controller_ng_ctl
-  cloud_controller_jobs_ctl.erb: bin/cloud_controller_jobs_ctl
+  cloud_controller_jobs_local_ctl.erb: bin/cloud_controller_jobs_local_ctl
+  cloud_controller_jobs_generic_ctl.erb: bin/cloud_controller_jobs_generic_ctl
   cloud_controller_clock_ctl.erb: bin/cloud_controller_clock_ctl
   handle_nfs_or_local_blobstore.sh.erb: bin/handle_nfs_or_local_blobstore.sh
   stacks.yml.erb: config/stacks.yml
@@ -409,6 +410,8 @@ properties:
   ccng.jobs.generic.number_of_workers:
     default: 1
     description: "Number of generic cloud_controller_jobs workers"
+  ccng.jobs.generic.collocate_cc.number_of_workers:
+    description: "Number of cloud_controller_jobs_generic workers collocated with CC"
 
   dea_next.staging_memory_limit_mb:
     description: "Memory limit in mb for staging tasks"

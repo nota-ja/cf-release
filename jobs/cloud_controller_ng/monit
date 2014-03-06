@@ -12,16 +12,31 @@ check process cloud_controller_ng
   then restart
 
 <% (1..(p("ccng.jobs.local.number_of_workers"))).each do |index| %>
-check process cloud_controller_jobs_<%= index %>
-  with pidfile /var/vcap/sys/run/cloud_controller_ng/cloud_controller_jobs_<%= index %>.pid
-  start program "/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_jobs_ctl start <%= index %>"
-  stop program "/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_jobs_ctl stop <%= index %>"
+check process cloud_controller_jobs_local_<%= index %>
+  with pidfile /var/vcap/sys/run/cloud_controller_ng/cloud_controller_jobs_local_<%= index %>.pid
+  start program "/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_jobs_local_ctl start <%= index %>"
+  stop program "/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_jobs_local_ctl stop <%= index %>"
 <% if spec.index.to_i == 0 %>
   depends on cloud_controller_ng
 <% end %>
   group vcap
   if totalmem > 2250 Mb then alert
   if totalmem > 2450 Mb then restart
+<% end %>
+
+<% if_p("ccng.jobs.generic.collocate_cc.number_of_workers") do |number_of_workers| %>
+<% (1..number_of_workers).each do |index| %>
+check process cloud_controller_jobs_generic_<%= index %>
+  with pidfile /var/vcap/sys/run/cloud_controller_ng/cloud_controller_jobs_generic_<%= index %>.pid
+  start program "/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_jobs_generic_ctl start <%= index %>"
+  stop program "/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_jobs_generic_ctl stop <%= index %>"
+<% if spec.index.to_i == 0 %>
+  depends on cloud_controller_ng
+<% end %>
+  group vcap
+  if totalmem > 2250 Mb then alert
+  if totalmem > 2450 Mb then restart
+<% end %>
 <% end %>
 
 check process nginx_ccng
@@ -52,10 +67,10 @@ check process cloud_controller_clock
 
 <% if p("ccng.process_group") == "worker" %>
 <% (1..(p("ccng.jobs.generic.number_of_workers"))).each do |index| %>
-check process cloud_controller_jobs_<%= index %>
-  with pidfile /var/vcap/sys/run/cloud_controller_ng/cloud_controller_jobs_<%= index %>.pid
-  start program "/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_jobs_ctl start <%= index %>"
-  stop program "/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_jobs_ctl stop <%= index %>"
+check process cloud_controller_jobs_generic_<%= index %>
+  with pidfile /var/vcap/sys/run/cloud_controller_ng/cloud_controller_jobs_generic_<%= index %>.pid
+  start program "/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_jobs_generic_ctl start <%= index %>"
+  stop program "/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_jobs_generic_ctl stop <%= index %>"
   group vcap
   if totalmem > 2250 Mb then alert
   if totalmem > 2450 Mb then restart
