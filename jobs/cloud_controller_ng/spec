@@ -403,6 +403,9 @@ properties:
     description: "Number of generic cloud_controller_jobs workers"
   ccng.jobs.generic.collocate_cc.number_of_workers:
     description: "Number of cloud_controller_jobs_generic workers collocated with CC"
+  ccng.clock.collocate_cc:
+    default: false
+    description: "Enable clock collocated with CC"
 
   dea_next.staging_memory_limit_mb:
     description: "Memory limit in mb for staging tasks"
